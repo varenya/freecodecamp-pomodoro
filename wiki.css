@@ -85,3 +85,7 @@
 .plus , .minus {
   cursor:pointer;
 }
+.disabledbutton {
+    pointer-events: none;
+    opacity: 0.4;
+}

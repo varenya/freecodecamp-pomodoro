@@ -55,9 +55,12 @@ var Clock = React.createClass({
     var breaker = true;
     var minutes,seconds;
     var counter;
-    console.log("Start",this.state.start);
+    // console.log("Start",this.state.start);
 
     if(this.state.start){
+
+      $(".plus").addClass("disabledbutton");
+      $(".minus").addClass("disabledbutton");
 
       this.state.counter = setInterval(function () {
         minutes = parseInt(timer / 60, 10);
@@ -83,7 +86,9 @@ var Clock = React.createClass({
       }.bind(this), 1000);
     }
     else{
-      console.log(this.state.counter);
+      $(".plus").removeClass("disabledbutton");
+      $(".minus").removeClass("disabledbutton");
+      // console.log(this.state.counter);
       if(this.state.counter!="counter")
       {
         clearTimeout(this.state.counter);
@@ -91,8 +96,8 @@ var Clock = React.createClass({
         let min = parseInt(split_time[0]);
         let sec = parseInt(split_time[1]);
         var lastDuration = (min*60 + sec);
-        console.log(minutes,seconds);
-        console.log(lastDuration);
+        // console.log(minutes,seconds);
+        // console.log(lastDuration);
         this.setState({timer:lastDuration});
       }
 
@@ -122,8 +127,8 @@ var Clock = React.createClass({
     // let displayText = this.props.intervalDuration + ":00";
     return (
       <div className="col-md-12">
-        <div className="clock-pomodoro">
-          <div className="time" onClick={this.handleClickTimer}> {this.state.displayText} </div>
+        <div className="clock-pomodoro" onClick={this.handleClickTimer}>
+          <div className="time"> {this.state.displayText} </div>
         </div>
       </div>
     );
@@ -134,7 +139,7 @@ var Clock = React.createClass({
 var Pomodoro = React.createClass({
 
   getInitialState: function () {
-    return {breaktime:0,interval:10};
+    return {breaktime:5,interval:25};
   },
 
   handleTimeChange : function(clock,time){
@@ -148,8 +153,8 @@ var Pomodoro = React.createClass({
   render: function() {
     return (
       <div className = "row">
-        <TimerDuration type="Break Length" initialDuration={0} onTimeChange={this.handleTimeChange}/>
-        <TimerDuration type="Session Length" initialDuration={10} onTimeChange={this.handleTimeChange}/>
+        <TimerDuration type="Break Length" initialDuration={5} onTimeChange={this.handleTimeChange}/>
+        <TimerDuration type="Session Length" initialDuration={25} onTimeChange={this.handleTimeChange}/>
         <Clock breakDuration={this.state.breaktime*60} intervalDuration={this.state.interval*60}/>
       </div>
     );
