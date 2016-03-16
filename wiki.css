@@ -70,6 +70,8 @@
   /* padding-top: 10%; */
   border-radius: 250px;
   margin: 8% auto;
+  -webkit-user-select:none;
+  -moz-user-select:none;
   /* padding: 3%; */
   height: 500px;
   width: 500px;
