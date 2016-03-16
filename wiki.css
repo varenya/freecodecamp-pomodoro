@@ -65,6 +65,7 @@
 
 .clock-pomodoro{
   border: 1px solid white;
+  cursor:pointer;
   /*margin-top: 10%;*/
   /* padding-top: 10%; */
   border-radius: 250px;
