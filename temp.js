@@ -45,7 +45,7 @@ var TimerDuration = React.createClass({
 var Clock = React.createClass({
 
   getInitialState: function () {
-    return {timer: this.props.intervalDuration,displayText:this.props.intervalDuration+":00",break:this.props.breakDuration};
+    return {timer: this.props.intervalDuration,displayText:this.props.intervalDuration/60+":00",break:this.props.breakDuration,start:false,counter:"counter"};
   },
 
   startTimer : function (duration,breakTime) {
@@ -54,34 +54,54 @@ var Clock = React.createClass({
     var timer = duration;
     var breaker = true;
     var minutes,seconds;
+    var counter;
+    console.log("Start",this.state.start);
 
-    setInterval(function () {
-          minutes = parseInt(timer / 60, 10);
-          seconds = parseInt(timer % 60, 10);
+    if(this.state.start){
 
-          minutes = minutes < 10 ? "0" + minutes : minutes;
-          seconds = seconds < 10 ? "0" + seconds : seconds;
+      this.state.counter = setInterval(function () {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
 
-          // display.text(minutes + ":" + seconds);
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
 
-          this.setState({displayText: minutes + ":" + seconds});
+        // display.text(minutes + ":" + seconds);
 
-          if (--timer < 0) {
-            if(breaker){
-              timer = breakTime;
-              breaker = !breaker;
-            }
-            else{
-              timer = duration;
-              breaker = !breaker;
-            }
+        this.setState({displayText: minutes + ":" + seconds});
+
+        if (--timer < 0) {
+          if(breaker){
+            timer = breakTime;
+            breaker = !breaker;
           }
+          else{
+            timer = duration;
+            breaker = !breaker;
+          }
+        }
       }.bind(this), 1000);
+    }
+    else{
+      console.log(this.state.counter);
+      if(this.state.counter!="counter")
+      {
+        clearTimeout(this.state.counter);
+        var split_time = this.state.displayText.split(":");
+        let min = parseInt(split_time[0]);
+        let sec = parseInt(split_time[1]);
+        var lastDuration = (min*60 + sec);
+        console.log(minutes,seconds);
+        console.log(lastDuration);
+        this.setState({timer:lastDuration});
+      }
+
+    }
 
   },
 
   componentWillReceiveProps: function(nextProps) {
-    console.log(nextProps);
+    //console.log(nextProps);
     this.setState({timer:nextProps.intervalDuration,break:nextProps.breakDuration});
     // this.setState({
     //   likesIncreasing: nextProps.likeCount > this.props.likeCount
@@ -90,7 +110,9 @@ var Clock = React.createClass({
 
   handleClickTimer : function (e) {
     e.preventDefault();
-    this.startTimer(this.state.timer,this.state.break);
+    this.setState({start:!this.state.start},function () {
+      this.startTimer(this.state.timer,this.state.break);
+    });
   },
 
 
@@ -128,7 +150,7 @@ var Pomodoro = React.createClass({
       <div className = "row">
         <TimerDuration type="Break Length" initialDuration={0} onTimeChange={this.handleTimeChange}/>
         <TimerDuration type="Session Length" initialDuration={10} onTimeChange={this.handleTimeChange}/>
-        <Clock breakDuration={this.state.breaktime} intervalDuration={this.state.interval}/>
+        <Clock breakDuration={this.state.breaktime*60} intervalDuration={this.state.interval*60}/>
       </div>
     );
   }
